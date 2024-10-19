@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rolling-update-depl
+  namespace: test
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # Max unavailable for 2 pods, 0.5 rounded down -> 0 pods unavailable during update
+      maxUnavailable: 25%
+      # Max nums of pods scheduled for 2 pods, 0.5 rounded up -> 1 pod scheduled during update
+      maxSurge: 25%
+  replicas: 2 
+  selector:
+    matchLabels:
+      app: rolling-update
+  template:
+    metadata:
+      labels:
+        app: rolling-update
+    spec:
+      containers:
+      - name: rolling-update
+      # Change the image tag to start the rolling update
+      # ONLY-TESTING: Downgrade the app to prev version, `k rollout undo deployment/myApp`
+        image: DOCKERHUB_USER/REPOSITORY:TAG
+        resources:
+          resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+        startupProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 20
+          periodSeconds: 5
+      imagePullSecrets:
+      - name: dockerhub-secret
