@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appDeployment
+  namespace: test
+spec:
+  # In native way you change the traffic manually by changing num of replicas
+  replicas: 2 
+  selector:
+    matchLabels:
+      app: canaryApp
+  template:
+    metadata:
+      labels:
+        app: canaryApp
+    spec:
+      containers:
+      - name: canaryApp
+        image: DOCKERHUB_USER/REPOSITORY:TAG
+        resources:
+          resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+        startupProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 20
+          periodSeconds: 5
+      imagePullSecrets:
+      - name: dockerhub-secret
