@@ -1,0 +1,7 @@
+Testing Helm Blue Green Deployment
+> Disclaimer: I'm using minikube and NodePort svc
+
+$nodeIP = $(k get node -o jsonpath="{.items[0].status.addresses[0].address}")
+$svcPort = $(k get service -l "app=bluegreen-app" -o jsonpath="{.items[0].spec.ports[0].nodePort}")
+
+curl $nodeIP':'$svcPort

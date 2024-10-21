@@ -1,0 +1,13 @@
+appName: bluegreen-app
+
+namespace: NAMESPACE
+
+blueImage:
+  repository: REPOSITORY
+  tag: TAG
+
+greenImage:
+  repository: REPOSITORY
+  tag: TAG
+
+currentDeployment: blue
