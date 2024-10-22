@@ -1,22 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: canaryDeployment
-  namespace: test
+  name: canary-app-v2
+  namespace: staging-test
 spec:
   # In native way you change the traffic manually by changing num of replicas
   replicas: 1 
   selector:
     matchLabels:
-      app: canaryApp
+      app: canary-app
+      version: v2
   template:
     metadata:
       labels:
-        app: canaryApp
+        app: canary-app
+        version: v2
+        istio: monitor
     spec:
       containers:
-      - name: canaryApp
-        image: DOCKERHUB_USER/REPOSITORY:TAG
+      - name: canary-app
+        image: aputra/myapp-lesson155:latest
+        env:
+          - name: SERVICE
+            value: canary-app
+          - name: VERSION
+            value: v2
         resources:
           requests:
             memory: "64Mi"
@@ -25,11 +33,5 @@ spec:
             memory: "128Mi"
             cpu: "500m"
         ports:
-        - containerPort: 80
-        startupProbe:
-          tcpSocket:
-            port: 80
-          initialDelaySeconds: 20
-          periodSeconds: 5
-      imagePullSecrets:
-      - name: dockerhub-secret
+        - name: http
+          containerPort: 8080

@@ -1,0 +1,17 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: canary-app
+  namespace: staging-test
+spec:
+  host: canary-app
+  subsets:
+    - name: v1
+      labels:
+        app: canary-app
+        version: v1
+    - name: v2
+      labels:
+        app: canary-app
+        version: v2

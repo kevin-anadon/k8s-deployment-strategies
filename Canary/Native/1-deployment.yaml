@@ -18,7 +18,6 @@ spec:
       - name: canaryApp
         image: DOCKERHUB_USER/REPOSITORY:TAG
         resources:
-          resources:
           requests:
             memory: "64Mi"
             cpu: "50m"

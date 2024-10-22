@@ -1,0 +1,27 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: canary-app
+  namespace: staging-test
+spec:
+  hosts:
+    - "*"
+  # for ingress gateway
+  gateways:
+    - api
+  http:
+    # for ingress gateway
+    - match:
+        - uri:
+            prefix: /
+      route:
+    # This could be automated
+        - destination:
+            host: canary-app
+            subset: v1
+          weight: 0
+        - destination:
+            host: canary-app
+            subset: v2
+          weight: 100

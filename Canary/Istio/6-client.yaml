@@ -1,0 +1,22 @@
+# For testing
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: backend
+  labels:
+    istio-injection: enabled
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: client
+  namespace: backend
+spec:
+  containers:
+    - name: client
+      image: curlimages/curl:latest
+      command: ["/bin/sh", "-c", "--"]
+      args: ["while true; do sleep 30; done;"]
+# To test inside the pod
+# while true; do curl http://canary-app.staging-test:8080/api/devices && echo "" && sleep 1; done;
